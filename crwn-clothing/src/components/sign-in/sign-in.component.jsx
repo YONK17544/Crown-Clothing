@@ -5,8 +5,6 @@ import Button from "../button/button.component.jsx";
 import {signInWithGooglePopup, createUserDocumentFromAuth, signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils.js";
 
 
-
-
 const SignInForm  = () =>{
 
     const defaultFormFields = {
@@ -17,6 +15,8 @@ const SignInForm  = () =>{
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { email, password } = formFields;
 
+    // const { setCurrentUser } = useContext(UserContext);
+
     console.log(formFields);
 
     const resetFormFields =() =>{
@@ -25,8 +25,8 @@ const SignInForm  = () =>{
 
      const signInWithGoogle = async () => {
        try {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+          await signInWithGooglePopup();
+    
   } catch (error) {
     if (error.code === 'auth/popup-closed-by-user') {
       alert('You closed the sign-in popup. Please try again.');
@@ -41,8 +41,9 @@ const SignInForm  = () =>{
         event.preventDefault();
 
         try{
-            const response = await signInAuthUserWithEmailAndPassword(email, password);
-            console.log(response);
+            const user = await signInAuthUserWithEmailAndPassword(email, password);
+            // setCurrentUser(user);
+            console.log(user);
             resetFormFields();
             
         }catch(error){
