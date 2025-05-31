@@ -24,8 +24,17 @@ const SignInForm  = () =>{
    }
 
      const signInWithGoogle = async () => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+       try {
+    const { user } = await signInWithGooglePopup();
+    await createUserDocumentFromAuth(user);
+  } catch (error) {
+    if (error.code === 'auth/popup-closed-by-user') {
+      alert('You closed the sign-in popup. Please try again.');
+    } else {
+      console.error('Google sign-in error:', error);
+      alert('Something went wrong with Google Sign-In.');
+    }
+  }
     }
 
     const handleSubmit = async(event) =>{
@@ -43,6 +52,9 @@ const SignInForm  = () =>{
                     break;
                 case "auth/user-not-found":
                     alert("no user associated with this email");
+                    break;
+                case "auth/popup-closed-by-user":
+                    alert("pop up closed by user");
                     break;
                 default:
                     console.log("user sign in encountered an error", error);
